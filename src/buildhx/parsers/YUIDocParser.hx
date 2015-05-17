@@ -68,6 +68,13 @@ class YUIDocParser extends SimpleParser
 		for (key in Reflect.fields(data.classes))
 		{
 			var cl:YUIClass = Reflect.field(data.classes, key);
+			
+			if(!Reflect.hasField(cl, 'alias')){
+				continue;
+			}else{
+				cl.name = cl.alias;
+				cl.shortName = cl.alias;
+			}
 		
 			var claz = Reflect.field(data.classes, key);
 			//trace("Class - "+cl.name);
@@ -189,7 +196,9 @@ class YUIDocParser extends SimpleParser
 					}
 					else
 					{
-						classDef.methods.set(methodDef.name, methodDef);
+						if(Reflect.hasField(classDef, 'methods')){
+							classDef.methods.set(methodDef.name, methodDef);
+						}
 					}
 					
 					if(i.description != null)
@@ -490,6 +499,8 @@ typedef YUIClass =
 	//var extends:String; //parent class
 	var is_constructor:Int; //1 = constructor
 	var params:Array<YUIMethodParam>; //constructor params
+	var alias : String;
+	var shortName : String;
 }
 
 typedef YUIClassItem = 
